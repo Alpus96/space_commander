@@ -73,7 +73,7 @@
             $data = json_decode(file_get_contents('php://input'));
 
             if ($url == '/login') {
-
+                $token = USER::login($data);
             } else if ($url == '/logout') {
 
             } else if ($url == '/updateAuthorName') {

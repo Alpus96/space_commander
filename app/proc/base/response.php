@@ -1,6 +1,6 @@
 <?php 
 
-    class Response extends ResponseBase {
+    class Response {
 
         private static $json_soc;
         private static $view_path;
@@ -139,7 +139,7 @@
          * 
          */
 
-         
+
         /**
          * @method POST
          */

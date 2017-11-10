@@ -1,10 +1,10 @@
 <?php
 
-    class UserModel extends Mysql {
+    class ArchiveModel extends Mysql {
 
         protected function __construct () {
             parent::__construct();
         }
-
+        
     }
 ?>

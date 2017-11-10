@@ -1,9 +1,11 @@
 <?php 
 
+    /**
+     * @todo Review code and add comments.
+     */
+
     class Response {
 
-        private static $json_soc;
-        private static $view_path;
         private static $token;
 
         public function __construct ($url, $method) {
@@ -11,8 +13,6 @@
             if (!is_string($url) || !is_string($method)) { return false; }
             if ($method != 'GET' && $method != 'POST') { return false; }
 
-            self::$json = new JsonSocket(ROOT_PATH.'/lib/etc');
-            self::$view_path = self::$json->read('view_paths');
             self::$token = $_COOKIE['token'] ? json_decode($_COOKIE['token'])->value : false;
 
             if ($method == 'GET') { self::GET($url); }
@@ -73,39 +73,99 @@
             $data = json_decode(file_get_contents('php://input'));
 
             if ($url == '/login') {
-                $token = USER::login($data);
+                $logged_in = USER::login($data);
+                $response = (object)['success' => $logged_in];
+                echo json_encode($response);
             } else if ($url == '/logout') {
-
+                $user = self::$token ? new User($token) : false;
+                $result = $user && $user->isActive() ? $user->logout() : true;
+                $response = (object)['success' => $result];
+                echo json_encode($response);
             } else if ($url == '/updateAuthorName') {
-                
+                $user = self::$token ? new User(self::$token) : false;
+                $result = $user && $user->isActive() ? $user->setNewName($data) : false;
+                $response = (object)['success' => $result];
+                echo json_encode($response);
             } else if ($url == '/updatePassword') {
-                                
+                $user = self::$token ? new User(self::$token) : false;
+                $result = $user && $user->isActive() ? $user->setNewPassword($data) : false;
+                $response = (object)['success' => $result];
+                echo json_encode($response);
             } else if ($url == '/newEntry') {
-                
+                $user = self::$token ? new User($token) : false;
+                $contents = new Contents();
+                $result = $user && $user->isActive() ? $contents->newEntry($data) : false;
+                $response = (object)['success' => $result];
+                echo json_encode($response);
             } else if ($url == '/updateEntry') {
-                
+                $user = self::$token ? new User(self::$token) : false;
+                $contents = new Contents();
+                $reslut = $user && $user->isActive() ? $contents->updateEntry($data) : false;
+                $response = (object)['success' => $result];
+                echo json_encode($response);
             } else if ($url == '/archiveEntry') {
-                
+                $user = self::$token ? new User(self::$token) : false;
+                $achive = new Archive();
+                $reslut = $user && $user->isActive() ? $achive->getFromContents($data) : false;
+                $response = (object)['success' => $result];
+                echo json_encode($response);
             } else if ($url == '/restoreEntry') {
-                
+                $user = self::$token ? new User(self::$token) : false;
+                $achive = new Archive();
+                $reslut = $user && $user->isActive() ? $achive->restoreToContents($data) : false;
+                $response = (object)['success' => $result];
+                echo json_encode($response);
             } else if ($url == '/markSaveArchived') {
-                
+                $user = self::$token ? new User(self::$token) : false;
+                $achive = new Archive();
+                $reslut = $user && $user->isActive() ? $achive->markToSave($data) : false;
+                $response = (object)['success' => $result];
+                echo json_encode($response);
             } else if ($url == '/removeArchived') {
-                
+                $user = self::$token ? new User(self::$token) : false;
+                $achive = new Archive();
+                $reslut = $user && $user->isActive() ? $achive->removeEntry($data) : false;
+                $response = (object)['success' => $result];
+                echo json_encode($response);
             } else if ($url == '/newImage') {
-                
+                $user = self::$token ? new User(self::$token) : false;
+                /**
+                 * @todo Figure out how this works.
+                 */
             } else if ($url == '/removeImage') {
-                
+                $user = self::$token ? new User(self::$token) : false;
+                $image = new Image();
+                $reslut = $user && $user->isActive() ? $image->delete($data) : false;
+                $response = (object)['success' => $result];
+                echo json_encode($response);
             } else if ($url == '/newUser') {
-                
+                $admin = self::$token ? new Admin($token) : false;
+                $result = $admin && $admin->isActive() ? $admin->addUser($data) : false;
+                $response = (object)['success' => $result];
+                echo json_encode($response);
             } else if ($url == '/toggleUserLock') {
-                
+                $admin = self::$token ? new Admin($token) : false;
+                $result = $admin && $admin->isActive() ? $admin->toggleUserLock($data) : false;
+                $response = (object)['success' => $result];
+                echo json_encode($response);
             } else if ($url == '/updateUserType') {
-                
+                $admin = self::$token ? new Admin($token) : false;
+                $result = $admin && $admin->isActive() ? $admin->setUserType($data) : false;
+                $response = (object)['success' => $result];
+                echo json_encode($response);
             } else if ($url == '/resetUserPassword') {
-                
+                $admin = self::$token ? new Admin($token) : false;
+                $newPass = $admin && $admin->isActive() ? $admin->resetUserPass($data) : false;
+                $response = (object)['success' => $newPass ? true : false, 'newPass' => $newPass];
+                echo json_encode($response);
             } else if ($url == '/removeUser') {
-                
+                $admin = self::$token ? new Admin($token) : false;
+                $result = $admin && $admin->isActive() ? $admin->removeUser($data) : false;
+                $response = (object)['success' => $result];
+                echo json_encode($result);
+            } else {
+                $response = (object)['success' => false];
+                echo json_encode($response);
             }
         }
 

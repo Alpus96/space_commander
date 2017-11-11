@@ -4,10 +4,20 @@
      * @todo Review code and add comments.
      */
 
+    /**
+     * This is the main controller, it synthasises a response on every request.
+     */
     class Response {
 
         private static $token;
 
+        /**
+         * Initates the class by confirm the request is valid and getting 
+         * token is set and desiding correct response type.
+         *
+         * @param string $url
+         * @param string $method
+         */
         public function __construct ($url, $method) {
             parent::__construct();
             if (!is_string($url) || !is_string($method)) { return false; }
@@ -19,6 +29,12 @@
             else if ($method == 'POST') { self::POST($url); }
         }
 
+        /**
+         * Checks what to GET.
+         *
+         * @param string $url
+         * @return void
+         */
         private function GET ($url) {
             if ($url == '/') {
                 echo file_get_contents(ROOT_PATH.'/app/ui/index.html');
@@ -68,6 +84,12 @@
             }
         }
 
+        /**
+         * Checks what the post was and performes an action to respond.
+         *
+         * @param string $url
+         * @return void
+         */
         private function POST ($url) {
             //  Get the post data.
             $data = json_decode(file_get_contents('php://input'));
@@ -105,14 +127,14 @@
                 echo json_encode($response);
             } else if ($url == '/archiveEntry') {
                 $user = self::$token ? new User(self::$token) : false;
-                $achive = new Archive();
-                $reslut = $user && $user->isActive() ? $achive->getFromContents($data) : false;
+                $contents = new Contents();
+                $reslut = $user && $user->isActive() ? $contents->archiveEntry($data) : false;
                 $response = (object)['success' => $result];
                 echo json_encode($response);
             } else if ($url == '/restoreEntry') {
                 $user = self::$token ? new User(self::$token) : false;
                 $achive = new Archive();
-                $reslut = $user && $user->isActive() ? $achive->restoreToContents($data) : false;
+                $reslut = $user && $user->isActive() ? $achive->restore($data) : false;
                 $response = (object)['success' => $result];
                 echo json_encode($response);
             } else if ($url == '/markSaveArchived') {
@@ -124,14 +146,16 @@
             } else if ($url == '/removeArchived') {
                 $user = self::$token ? new User(self::$token) : false;
                 $achive = new Archive();
-                $reslut = $user && $user->isActive() ? $achive->removeEntry($data) : false;
+                $reslut = $user && $user->isActive() ? $achive->remove($data) : false;
                 $response = (object)['success' => $result];
                 echo json_encode($response);
             } else if ($url == '/newImage') {
                 $user = self::$token ? new User(self::$token) : false;
+
                 /**
                  * @todo Figure out how this works.
                  */
+                
             } else if ($url == '/removeImage') {
                 $user = self::$token ? new User(self::$token) : false;
                 $image = new Image();

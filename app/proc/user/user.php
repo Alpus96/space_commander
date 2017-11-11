@@ -26,7 +26,7 @@
             //  Save the decoded token and the new token.
             self::$user = $new_token ? self::$token_store->decode($new_token) : false;
             if ($new_token) {
-                self::setCookie($new_token);
+                setcookie('token', $new_token);
             }
         }
 
@@ -74,7 +74,7 @@
             $new_token = $cleared ? self::$token_store->create(self::$user) : false;
             //  Set the new token cookie.
             if ($new_token) {
-                self::setCookie($new_token);
+                setcookie('token', $new_token);
             }
             //  Return the result.
             return $new_token ? true : false;
@@ -102,7 +102,7 @@
                 $new_token = $cleared ? self::$token_store->create(self::$user) : false;
                 //  Set the new token cookie.
                 if ($new_token) {
-                    self::setCookie($new_token);
+                    setcookie('token', $new_token);
                 }
                 //  Return the result.
                 return $new_token ? true : false;
@@ -132,20 +132,10 @@
             //  Create a token, set the token cookie and rreturn the result.
             $token = self::$token_store->create($user);
             if ($token) {
-                self::setCookie($token);
+                setcookie('token', $token);
                 return true;
             }
             return false;
-        }
-
-        /**
-         * Sets the users token cookie.
-         *
-         * @param string $token
-         * @return void
-         */
-        private function setCookie ($token) {
-            setcookie('token', $token);
         }
 
     }

@@ -110,8 +110,7 @@
         public function resetUserPass ($data) {
             if (!is_object($data)) { return false; }
             if (!property_exists($data, 'username')) { return false; }
-            $new_pass = new RandStr(6);
-            return parent::setPassword($data->username, $new_pass);
+            return parent::setPassword($data->username, rand_str());
         }
 
         /**

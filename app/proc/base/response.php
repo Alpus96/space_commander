@@ -178,7 +178,7 @@
             $data = json_decode(file_get_contents('php://input'));
 
             if ($url == '/login') {
-                $logged_in = USER::login($data);
+                $logged_in = User::login($data);
                 $response = (object)['success' => $logged_in];
                 echo json_encode($response);
             } else if ($url == '/logout') {

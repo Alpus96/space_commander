@@ -20,14 +20,47 @@
          */
         public function __construct ($url, $method) {
             parent::__construct();
+            //  Verify the passed parameters.
             if (!is_string($url) || !is_string($method)) { return false; }
             if ($method != 'GET' && $method != 'POST') { return false; }
 
+            //  Get the token cookie.
             self::$token = $_COOKIE['token'] ? json_decode($_COOKIE['token'])->value : false;
 
+            //  Determine what request type to respond to.
             if ($method == 'GET') { self::GET($url); }
             else if ($method == 'POST') { self::POST($url); }
         }
+
+        /**
+         * @method GET
+         */
+        /**
+         * @group Resources
+         * 
+         * /
+         * /contentsByMarker
+         * /contentById
+         * 
+         */
+
+        /**
+         * @group cms
+         * 
+         * /cms
+         * /contentAsMarkdown
+         * /archivedContent
+         * 
+         */
+
+        /** 
+         * @group users
+         * 
+         * /login
+         * /authorName
+         * /allUsers
+         * 
+         */
 
         /**
          * Checks what to GET.
@@ -83,6 +116,44 @@
                 echo file_get_contents(ROOT_PATH.'/app/ui/html/404.html');
             }
         }
+
+        /**
+         * @method POST
+         */
+        /** 
+         * @group users
+         * 
+         * /login
+         * /logout
+         * /updateAuthorName
+         * /updatePassword
+         * 
+         */
+
+        /**
+         * @group contents
+         * 
+         * /newEntry
+         * /updateEntry
+         * /archiveEntry
+         * /restoreEntry
+         * /markSaveArchived
+         * /removeArchived
+         * /newImage
+         * /removeImage
+         * 
+         */
+
+        /** 
+         * @group admins
+         * 
+         * /newUser
+         * /toggleUserLock
+         * /updateUserType
+         * /resetUserPassword
+         * /removeUser
+         * 
+         */
 
         /**
          * Checks what the post was and performes an action to respond.
@@ -155,7 +226,7 @@
                 /**
                  * @todo Figure out how this works.
                  */
-                
+
             } else if ($url == '/removeImage') {
                 $user = self::$token ? new User(self::$token) : false;
                 $image = new Image();
@@ -193,73 +264,5 @@
             }
         }
 
-        /**
-         * @method GET
-         */
-        /**
-         * @group Resources
-         * 
-         * /
-         * /contentsByMarker
-         * /contentById
-         * 
-         */
-
-        /**
-         * @group cms
-         * 
-         * /cms
-         * /contentAsMarkdown
-         * /archivedContent
-         * 
-         */
-
-        /** 
-         * @group users
-         * 
-         * /login
-         * /authorName
-         * /allUsers
-         * 
-         */
-
-
-        /**
-         * @method POST
-         */
-        /** 
-         * @group users
-         * 
-         * /login
-         * /logout
-         * /updateAuthorName
-         * /updatePassword
-         * 
-         */
-
-        /**
-         * @group contents
-         * 
-         * /newEntry
-         * /updateEntry
-         * /archiveEntry
-         * /restoreEntry
-         * /markSaveArchived
-         * /removeArchived
-         * /newImage
-         * /removeImage
-         * 
-         */
-
-        /** 
-         * @group admins
-         * 
-         * /newUser
-         * /toggleUserLock
-         * /updateUserType
-         * /resetUserPassword
-         * /removeUser
-         * 
-         */
     }
 ?>

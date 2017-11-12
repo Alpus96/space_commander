@@ -1,6 +1,15 @@
 <?php
 
     /**
+     * @uses AdminModel Alexander Ljungberg Perme
+     * @uses TokenStore Alexander Ljungberg Perme
+     * @uses rand_str   Alexadner Ljungberg Perme
+     */
+    require_once ROOT_PATH.'/app/var/admin_model.php';
+    require_once ROOT_PATH.'/lib/jwt_store/proc/jwt_store.php';
+    require_once ROOT_PATH.'/lib/rand_str.php';
+
+    /**
      * Controller for the admin functionality.
      */
     class Admin extends AdminModel {

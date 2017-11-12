@@ -1,7 +1,9 @@
 <?php
     /**
+     * @uses UserModel  Alexander Ljungberg Perme
      * @uses TokenStore Alexander Ljungberg Perme
      */
+    require_once ROOT_PATH.'/app/var/user/user_model.php';
     require_once ROOT_PATH.'/lib/jwt_store/proc/jwt_store.php';
 
     /**

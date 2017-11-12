@@ -1,6 +1,18 @@
 <?php
 
     /**
+     * @global ROOT_PATH ; System root path of the project.
+     */
+    define('ROOT_PATH', __DIR__);
+    
+        /**
+         * @uses LogSocket Alexander Ljungberg Perme
+         * @uses Responese Alexander Ljungberg Perme
+         */
+        require_once ROOT_PATH.'/app/proc/base/response.php';
+        require_once ROOT_PATH.'/lib/srv/log.php';
+
+    /**
      * This file handels seting the root path and instansing 
      * the response handler with the requested url and method.
      * Also shows error page if responder is unable to give resopnse.
@@ -13,16 +25,6 @@
      * @copyright 2017 Alexander Ljungberg Perme
      * @license MIT
      */
-
-    //  Define a root path for paths in project.
-    define('ROOT_PATH', __DIR__);
-
-    /**
-     * @uses LogSocket Alexander Ljungberg Perme
-     * @uses Responese Alexander Ljungberg Perme
-     */
-    require_once ROOT_PATH.'/app/proc/base/response.php';
-    require_once ROOT_PATH.'/lib/srv/socket/log.php';
 
     //  Try creating a new response instnace. If the 
     //  responder threw an Exception set it as the response.

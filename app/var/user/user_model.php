@@ -1,6 +1,11 @@
 <?php
 
     /**
+     * @uses Mysql Alexander Ljungberg Perme
+     */
+    require_once ROOT_PATH.'/lib/socket/mysql.php';
+
+    /**
      * The database model for the user controller.
      */
     class UserModel extends Mysql {

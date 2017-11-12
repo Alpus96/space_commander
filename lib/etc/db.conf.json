@@ -1,0 +1,9 @@
+{
+    "credentials": {
+        "host": "localhost",
+        "user": "cms",
+        "pass": "1234",
+        "dbase": "cms"
+    },
+    "charset": "utf8"
+}

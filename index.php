@@ -45,8 +45,8 @@
             echo json_encode((object)['success' => false]);
         }
         //  Log the Exception.
-        $log_soc = new LogSocket(ROOT_PATH.'/lib/srv/logs', 'Exception_Log');
-        $log_soc->log(json_encode($response));
+        $log = new Log(ROOT_PATH.'/lib/srv/logs/', 'Exception_Log');
+        $log->writeLine(json_encode($response));
     }
 
  ?>

@@ -1,4 +1,17 @@
-<?php 
+<?php
+
+    /**
+     * @uses User     Alexander Ljungberg Perme
+     * @uses Admin    Alexander Ljungberg Perme
+     * @uses Contents Alexander Ljungberg Perme
+     * @uses Archive  Alexander Ljungberg Perme
+     * @uses Image    Alexander Ljungberg Perme
+     */
+    require_once ROOT_PATH.'/app/proc/user/user.php';
+    require_once ROOT_PATH.'/app/proc/user/admin.php';
+    require_once ROOT_PATH.'/app/proc/contents/contents.php';
+    require_once ROOT_PATH.'/app/proc/contents/archive.php';
+    require_once ROOT_PATH.'/app/proc/contents/images.php';
 
     /**
      * @todo Review code and add comments.
@@ -19,7 +32,6 @@
          * @param string $method
          */
         public function __construct ($url, $method) {
-            parent::__construct();
             //  Verify the passed parameters.
             if (!is_string($url) || !is_string($method)) { return false; }
             if ($method != 'GET' && $method != 'POST') { return false; }

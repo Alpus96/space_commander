@@ -48,10 +48,21 @@
         /**
          * Returns a list of all users, except the main admin and the active admin.
          *
-         * @return object
+         * @return array
          */
         public function showUsers () {
-            return parent::getUsers();
+            //  Confirm the requestie is an abmin.
+            if (!self::isActive()) { return false; }
+            //  Get all users.
+            $users = parent::getUsers();
+            //  Remove self and the main 'admin' user.
+            foreach ($users as $i => $user) {
+                if ($user->username == 'admin' || ($user->username == self::$admin->username && $user->type == 2)) {
+                    array_splice($users, $i, 1);
+                }
+            }
+            //  Return the users.
+            return $users;
         }
         
         /**
@@ -61,28 +72,40 @@
          * @return boolean
          */
         public function addUser ($data) {
+            //  Confirm the request came from an admin.
+            if (!self::isActive()) { return false; }
+            //  Validate the passed parameters.
             if (!is_object($data)) { return false; }
             if (!property_exists($data, 'username')) { return false; }
             if (!property_exists($data, 'password') && strlen($data->password) > 5) { return false; }
             if (!property_exists($data, 'conf_pass')) { return false; }
             if (!property_exists($data, 'type')) { return false; }
+            //  Create the user.
             $created = false;
             if ($data->password === $data->conf_pass) {
-                $created = parent::createNewUser($data->username, $data->password, $data->type);
+                $hash = password_hash($data->password, PASSWORD_DEFAULT);
+                $created = parent::createNewUser($data->username, $hash, $data->type);
             }
+            //  Return result.
             return $created;
         }
 
         /**
          * Toggles the locked status of a user allowing or disallowing 
          * them to login and logs them out if active.
+         * 
+         * @todo Logout the user being locked if active.
          *
          * @param object $data
          * @return boolean
          */
         public function toggleUserLock ($data) {
+            //  Confirm the request came from an admin.
+            if (!self::isActive()) { return false; }
+            //  Validate the passed parameters.
             if (!is_object($data)) { return false; }
             if (!property_exists($data, 'username')) { return false; }
+            //  Toggle the lock and return result.
             return parent::toggleLock($data->username);
         }
 
@@ -93,24 +116,35 @@
          * @return boolean
          */
         public function setUserType ($data) {
+            //  Confirm the request came from an admin.
+            if (!self::isActive()) { return false; }
+            //  Validate the passed parameters.
             if (!is_object($data)) { return false; }
             if (!property_exists($data, 'username')) { return false; }
             if (!property_exists($data, 'type')) { return false; }
+            //  Set the new type and return the result.
             return parent::setType($data->username, $data->type);
         }
 
         /**
          * Sets a users password to a random string and returns it to use for temporary use.
          * 
-         * @todo flag temporary password.
+         * @todo Flag temporary password to prompt pw change.
          *
          * @param object $data
-         * @return boolean
+         * @return string|boolean
          */
         public function resetUserPass ($data) {
+            //  Confirm the request came from an admin.
+            if (!self::isActive()) { return false; }
+            //  Validate the passed parameters.
             if (!is_object($data)) { return false; }
             if (!property_exists($data, 'username')) { return false; }
-            return parent::setPassword($data->username, rand_str());
+            //  Set the new password.
+            $new_pass = rand_str();
+            $is_updated = parent::setPassword($data->username, $new_pass);
+            //  Return the new password if updated.
+            return $is_updated ? $new_pass : false;
         }
 
         /**
@@ -120,8 +154,12 @@
          * @return boolean
          */
         public function removeUser ($data) {
+            //  Confirm the request came from an admin.
+            if (!self::isActive()) { return false; }
+            //  Validate the passed parameters.
             if (!is_object($data)) { return false; }
             if (!property_exists($data, 'username')) { return false; }
+            //  Delete the user and return result.
             return parent::delete($data->username);
         }
 

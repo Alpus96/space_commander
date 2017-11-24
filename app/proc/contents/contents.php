@@ -18,16 +18,14 @@
          * @param string $marker
          * @return object
          */
-        public function getByMarker ($marker, $offset, $amount) {
-            if (!is_string($marker)) { return false; }
-            if (!is_integet($offset)) { return false; }
-            if (!is_integer($amount)) { return false; }
+        public function getByMarker ($data) {
+            if (!property_exists($data, 'marker')) { return false; }
+            if (!property_exists($data, 'offset')) { return false; }
+            if (!property_exists($data, 'amount')) { return false; }
             /**
-             * @todo convert parameter to object.
-             * 
-             * @todo No markdown parsing needed?
+             * @todo Add markdown parsing if needed.
              */
-            return parent::selectMarker($marker, $offset, $amount);
+            return parent::selectMarker($data->marker, $data->offset, $data->amount);
         }
 
         /**
@@ -39,7 +37,7 @@
         public function getById ($id) {
             if (!is_integer($id)) { return false; }
             /**
-             * @todo No markdown parsing needed?
+             * @todo Add markdown parsing if needed.
              */
             return parent::selectId($id);
         }

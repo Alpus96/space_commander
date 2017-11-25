@@ -1,6 +1,10 @@
 <?php
 
     /**
+     * @todo Add comments.
+     */
+
+    /**
      * @uses User     Alexander Ljungberg Perme
      * @uses Admin    Alexander Ljungberg Perme
      * @uses Contents Alexander Ljungberg Perme

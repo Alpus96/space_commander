@@ -1,6 +1,11 @@
 <?php
 
     /**
+     * @uses ArchiveModel ---
+     */
+    require_once ROOT_PATH.'/app/var/contents/archive_model.php';
+
+    /**
      * Handles the archived contents.
      */
     class Archive extends ArchiveModel {
@@ -15,7 +20,7 @@
         /**
          * Gets all archived contents from the database.
          *
-         * @return object
+         * @return array
          */
         public function getAll () {
             
@@ -37,7 +42,7 @@
          * @param object $data
          * @return boolean
          */
-        public function marToSave ($data) {
+        public function markToSave ($data) {
 
         }
 

@@ -14,7 +14,8 @@
                 'insert' => '',
                 'selectMarker' => '',
                 'selectId' => '',
-                '' => ''
+                'insertToArchive' => '',
+                'delete' => 'DELETE * FROM CONTENTS WHERE ID = ?'
             ];
         }
 
@@ -54,7 +55,7 @@
             $conn->close();
             return false;
         }
-
+        
         protected function selectMarker ($marker, $offset, $amount) {
             //  Verify the passed parameters.
             if (!is_string($marker)) { return false; }
@@ -109,34 +110,70 @@
         }
 
         /**
-         * @todo what to do about entries being changed by a different author than 'poster'.
+         * @todo what to do about entries being changed by a different author? 
+         *       (anyone except the one that made the original post)
          */
 
         protected function update ($id, $text) {
-            //
+            //  Verify the passed parameters.
             if (!is_integer($id)) { return false; }
             if (!is_string($text)) { return false; }
-            //
+            //  Connect to the database.
             $conn = parent::connect();
             if (!$conn) { return false; }
-            //
+            //  Run the query.
             if ($query = $conn->prepare(self::$query->update)) {
                 $query->bind_param();
                 $query->execute();
-                //
+                //  Confirm the query was successful.
                 $was_successful = $query->affected_rows > 0 ? true : false;
-                //
+                //  Close the query and connection before returning the success status.
                 $query->close();
                 $conn->close();
                 return $was_successful;
             }
-            //
+            //  If the query could not be run close the database connection and return success false.
             $conn->close();
             return false;
         }
 
         protected function moveToArchive ($id) {
-
+            //
+            if (!is_integer($id)) { return false; }
+            //  
+            $entry = $this->selectId($id);
+            if (!$entry) { return false; }
+            //
+            $conn = parent::connect();
+            if (!$conn) { return false; }
+            //
+            if ($query = $conn->prepare(self::$query->insertToArchive)) {
+                $query->bind_param('sss', $entry->text, $entry->author, $entry->unix);
+                $query->execute();
+                //
+                $was_successful = $query->affected_rows > 0 ? true : false;
+                //
+                $query->close();
+                if ($was_successful && $query = $conn->prepare(self::$query->delete)) {
+                    $query->bind_param('i', $id);
+                    $query->execute();
+                    //
+                    $was_successful = $query->affected_rows > 0 ? true : false;
+                    //
+                    $query->close();
+                    $conn->close();
+                    return $was_successful;
+                }
+                /**
+                 * @todo Should archive be removed if delete from contents fails?
+                 */
+                //
+                $conn->close();
+                return false;
+            }
+            //
+            $conn->close();
+            return false;
         }
         
     }

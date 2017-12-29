@@ -1,6 +1,13 @@
 <?php
 
     /**
+     * @uses ContentsModel  Alexadner Ljungberg Perme
+     * @uses Parsedown      Emanuil Rusev
+     */
+    require_once ROOT_PATH.'/lib/parsedown/Parsedown.php';
+    require_once ROOT_PATH.'/app/var/contents/contents_model.php';
+
+    /**
      * Handles the content entries in the database.
      */
     class Contents extends ContentsModel {
@@ -15,17 +22,19 @@
         /**
          * Returns several entries with the same marker.
          *
-         * @param string $marker
-         * @return object
+         * @param object $data
+         * @return array
          */
         public function getByMarker ($data) {
             if (!property_exists($data, 'marker')) { return false; }
             if (!property_exists($data, 'offset')) { return false; }
             if (!property_exists($data, 'amount')) { return false; }
-            /**
-             * @todo Add markdown parsing if needed.
-             */
-            return parent::selectMarker($data->marker, $data->offset, $data->amount);
+            $entries = parent::selectMarker($data->marker, $data->offset, $data->amount);
+            foreach ($entries as $key => $value) {
+                $value->text = Parsedown::text($value->text);
+                $entries[$key] = $value;
+            }
+            return $entries;
         }
 
         /**
@@ -36,22 +45,20 @@
          */
         public function getById ($id) {
             if (!is_integer($id)) { return false; }
-            /**
-             * @todo Add markdown parsing if needed.
-             */
-            return parent::selectId($id);
+            $entry = parent::selectId($id);
+            $entry->text = Parsedown::text($entry->text);
+            return $entry;
         }
 
         /**
          * Returns a spresific entry as raw markdown.
          *
-         * @param ingeter $id
+         * @param integer $id
          * @return object
          */
         public function getAsMd ($id) {
-            /**
-             * @todo Figure out if markdown parsing can happen in browser.
-             */
+            if (!is_integer($id)) { return false; }
+            return parent::selectId($id);
         }
 
         /**

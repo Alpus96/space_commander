@@ -1,7 +1,11 @@
 <?php
 
     /**
-     * @uses ArchiveModel ---
+     * @todo Write functions and comments.
+     */
+
+    /**
+     * @uses ArchiveModel Alexander Ljungberg Perme
      */
     require_once ROOT_PATH.'/app/var/contents/archive_model.php';
 
